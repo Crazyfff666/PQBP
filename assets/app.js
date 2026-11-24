@@ -144,13 +144,34 @@
   });
 
   $('#menu-toggle').addEventListener('click', function () { $('#main-nav').classList.toggle('open'); });
-  $('#logo-home').addEventListener('click', function () { if (state.view !== 'quiz') go('dashboard'); });
+  $('#logo-home').addEventListener('click', function () { if (state.view !== 'quiz') go('bankselect'); });
+
+  // 初始化题库下拉选择器
+  (function initBankSelect() {
+    var sel = $('#bank-select');
+    if (!sel) return;
+    Bank.keys().forEach(function (key) {
+      var reg = Bank.REG[key];
+      var opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = reg.title;
+      sel.appendChild(opt);
+    });
+    sel.addEventListener('change', function () {
+      if (!sel.value) return;
+      chooseBank(sel.value);
+    });
+  })();
 
   function go(view) {
     state.view = view;
     $('#main-nav').classList.remove('open');
     $$('.nav-item').forEach(function (b) {
-      b.classList.toggle('active', b.getAttribute('data-view') === view);
+      var dv = b.getAttribute('data-view');
+      // "首页"对应 bankselect；bankselect 也激活首页按钮
+      var activeView = view;
+      if (view === 'bankselect') activeView = 'bankselect';
+      b.classList.toggle('active', dv === activeView || (view === 'bankselect' && dv === 'bankselect'));
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
     render();
@@ -226,8 +247,14 @@
     state.bank = key;
     Bank.setBank(key);
     Store.setBank(key);
-    $('#bank-current-name').textContent = bank.title;
+    syncBankSelect(key);
     go('dashboard');
+  }
+
+  function syncBankSelect(key) {
+    var sel = $('#bank-select');
+    if (!sel) return;
+    sel.value = key;
   }
 
   /* ============================================================
