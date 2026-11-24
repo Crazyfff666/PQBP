@@ -65,10 +65,12 @@
           <rect x="34" y="34" width="14" height="4.5" rx="1.2" transform="rotate(-45 34 34)" fill="#a4262c"/>
         </svg>
         <span>考试习题平台</span>
-        <span class="bank-indicator" id="bank-current-name"></span>
+        <select class="bank-select" id="bank-select" title="切换题库">
+          <option value="">切换题库…</option>
+        </select>
       </div>
       <nav class="nav" id="main-nav">
-        <button class="nav-item active" data-view="dashboard">首页</button>
+        <button class="nav-item active" data-view="bankselect">首页</button>
         <button class="nav-item" data-view="practice">练习</button>
         <button class="nav-item" data-view="exam">模拟考试</button>
         <button class="nav-item" data-view="wrong">错题库<span class="badge" id="nav-wrong-badge">0</span></button>
