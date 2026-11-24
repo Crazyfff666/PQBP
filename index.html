@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#a4262c">
+<title>考试习题平台</title>
+<meta name="description" content="多题库在线练习平台：投资类业务模拟、CCSA标准化人员资格、电力交易员、D建模拟等，支持分类练习、模拟考试、个人错题库与错题重练。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23a4262c'/%3E%3Cpath d='M16 7l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L7.3 13.4l6.1-.8z' fill='%23f5c542'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<!-- ========== 登录页 ========== -->
+<div id="auth-view" class="auth-wrap">
+  <div class="auth-bg" aria-hidden="true"></div>
+  <div class="auth-card">
+    <div class="auth-brand">
+      <svg class="emblem" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="31" fill="#a4262c"/>
+        <path d="M20 40c-1-6 2-12 8-14 4-1.4 8 .4 9.4 3.6M24 24c5-3 11-1.6 13.6 3" stroke="#f5c542" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+        <path d="M38 22l8 8-3 3-8-8z" fill="#f5c542"/>
+        <rect x="34" y="34" width="14" height="4.5" rx="1.2" transform="rotate(-45 34 34)" fill="#f5c542"/>
+      </svg>
+      <div>
+        <h1>考试习题平台</h1>
+        <p class="sub">多题库在线练习 · 投资 / 标准化 / 电力交易 / 党建</p>
+      </div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-authtab="login" role="tab">登录</button>
+      <button class="tab" data-authtab="register" role="tab">注册</button>
+    </div>
+
+    <form id="login-form" class="auth-form" autocomplete="on">
+      <label>用户名<input type="text" id="login-user" autocomplete="username" placeholder="请输入用户名" required></label>
+      <label>密码<input type="password" id="login-pass" autocomplete="current-password" placeholder="请输入密码" required></label>
+      <div class="form-msg" id="login-msg"></div>
+      <button type="submit" class="btn btn-primary btn-block">登 录</button>
+    </form>
+
+    <form id="register-form" class="auth-form hidden" autocomplete="on">
+      <label>用户名<input type="text" id="reg-user" autocomplete="username" placeholder="2-16 位，字母/数字/汉字" required></label>
+      <label>姓名 / 昵称<input type="text" id="reg-name" placeholder="选填，显示在页面右上角"></label>
+      <label>密码<input type="password" id="reg-pass" autocomplete="new-password" placeholder="不少于 4 位" required></label>
+      <label>确认密码<input type="password" id="reg-pass2" autocomplete="new-password" placeholder="再次输入密码" required></label>
+      <div class="form-msg" id="reg-msg"></div>
+      <button type="submit" class="btn btn-primary btn-block">注册并登录</button>
+    </form>
+
+    <p class="auth-tip">账号与练习记录保存在本浏览器本地，不会上传服务器。请在个人中心定期导出备份。</p>
+  </div>
+</div>
+
+<!-- ========== 主应用 ========== -->
+<div id="app-view" class="hidden">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo" id="logo-home">
+        <svg class="emblem sm" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="31" fill="#fff"/>
+          <path d="M20 40c-1-6 2-12 8-14 4-1.4 8 .4 9.4 3.6M24 24c5-3 11-1.6 13.6 3" stroke="#a4262c" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+          <path d="M38 22l8 8-3 3-8-8z" fill="#a4262c"/>
+          <rect x="34" y="34" width="14" height="4.5" rx="1.2" transform="rotate(-45 34 34)" fill="#a4262c"/>
+        </svg>
+        <span>考试习题平台</span>
+        <span class="bank-indicator" id="bank-current-name"></span>
+      </div>
+      <nav class="nav" id="main-nav">
+        <button class="nav-item active" data-view="dashboard">首页</button>
+        <button class="nav-item" data-view="practice">练习</button>
+        <button class="nav-item" data-view="exam">模拟考试</button>
+        <button class="nav-item" data-view="wrong">错题库<span class="badge" id="nav-wrong-badge">0</span></button>
+        <button class="nav-item" data-view="profile">个人中心</button>
+      </nav>
+      <div class="user-box">
+        <span class="uname" id="cur-user-name"></span>
+        <button class="btn btn-ghost btn-sm" id="btn-logout">退出</button>
+      </div>
+      <button class="menu-toggle" id="menu-toggle" aria-label="菜单">☰</button>
+    </div>
+  </header>
+
+  <main class="main" id="main"></main>
+
+  <footer class="footer">
+    <span>考试习题平台 · 多题库在线练习系统，账号与学习记录保存在本浏览器本地</span>
+  </footer>
+</div>
+
+<!-- 通用弹窗 -->
+<div class="modal-mask hidden" id="modal-mask">
+  <div class="modal" id="modal">
+    <h3 id="modal-title"></h3>
+    <div id="modal-body"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="data/DJTK_BANK.js"></script>
+<script src="data/TZTZ_BANK.js"></script>
+<script src="data/CCSA_BANK.js"></script>
+<script src="data/DIANK_BANK.js"></script>
+<script src="assets/store.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
